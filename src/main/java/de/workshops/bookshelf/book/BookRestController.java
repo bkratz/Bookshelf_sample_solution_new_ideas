@@ -59,8 +59,7 @@ public class BookRestController {
     @PostMapping("/search")
     public List<Book> searchBooks(@RequestBody @Valid BookSearchRequest request) {
         return this.books.stream()
-                .filter(book -> hasAuthor(book, request.author()))
-                .filter(book -> hasIsbn(book, request.isbn()))
+                .filter(book -> hasAuthor(book, request.author()) || hasIsbn(book, request.isbn()))
                 .toList();
     }
 
