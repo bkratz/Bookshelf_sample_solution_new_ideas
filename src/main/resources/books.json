@@ -2,19 +2,59 @@
     {
         "isbn": "978-0201633610",
         "title": "Design Patterns",
-        "author": "Erich Gamma",
-        "description": "Mit Design Patterns lassen sich wiederkehrende Aufgaben in der objektorientierten Softwareentwicklung effektiv lösen."
+        "description": "Mit Design Patterns lassen sich wiederkehrende Aufgaben in der objektorientierten Softwareentwicklung effektiv lösen.",
+        "authors": [
+            {
+                "firstname": "Erich",
+                "lastname": "Gamma"
+            },
+            {
+                "firstname": "Richard",
+                "lastname": "Helm"
+            },
+            {
+                "firstname": "Ralph",
+                "lastname": "Johnson"
+            },
+            {
+                "firstname": "John",
+                "lastname": "Vlissides"
+            }
+        ]
     },
     {
         "isbn": "978-3826655487",
         "title": "Clean Code",
-        "author": "Robert C. Martin",
-        "description": "Das einzige praxisnahe Buch, mit dem Sie lernen, guten Code zu schreiben!"
+        "description": "Das einzige praxisnahe Buch, mit dem Sie lernen, guten Code zu schreiben!",
+        "authors": [
+            {
+                "firstname": "Robert",
+                "middlename": "C.",
+                "lastname": "Martin"
+            }
+        ]
     },
     {
         "isbn": "978-3836211161",
         "title": "Coding for Fun",
-        "author": "Gottfried Wolmeringer",
-        "description": "Dieses unterhaltsam geschriebene Buch führt Sie spielerisch durch die spektakuläre Geschichte unserer Blechkollegen."
+        "description": "Dieses unterhaltsam geschriebene Buch führt Sie spielerisch durch die spektakuläre Geschichte unserer Blechkollegen.",
+        "authors": [
+            {
+                "firstname": "Gottfried",
+                "lastname": "Wolmeringer"
+            }
+        ]
+    },
+    {
+        "isbn": "978-3958457249",
+        "title": "Clean Architecture",
+        "description": "Das Praxis-Handbuch für professionelles Softwaredesign.Regeln und Paradigmen für effiziente Softwarestrukturierung.",
+        "authors": [
+            {
+                "firstname": "Robert",
+                "middlename": "C.",
+                "lastname": "Martin"
+            }
+        ]
     }
 ]
