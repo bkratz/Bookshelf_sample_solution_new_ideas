@@ -32,7 +32,7 @@ public class BookRestController {
     }
 
     @GetMapping(params = "author")
-    public Book getBookByAuthor(@RequestParam @NotBlank @Size(min = 3) String author) throws BookException {
+    public List<Book> getBookByAuthor(@RequestParam @NotBlank @Size(min = 3) String author) {
         return bookService.searchBookByAuthor(author);
     }
 
