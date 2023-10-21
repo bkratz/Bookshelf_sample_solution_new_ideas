@@ -7,6 +7,18 @@
             {
                 "firstname": "Erich",
                 "lastname": "Gamma"
+            },
+            {
+                "firstname": "Richard",
+                "lastname": "Helm"
+            },
+            {
+                "firstname": "Ralph",
+                "lastname": "Johnson"
+            },
+            {
+                "firstname": "John",
+                "lastname": "Vlissides"
             }
         ]
     },
@@ -23,6 +35,17 @@
         ]
     },
     {
+        "isbn": "978-3836211161",
+        "title": "Coding for Fun",
+        "description": "Dieses unterhaltsam geschriebene Buch führt Sie spielerisch durch die spektakuläre Geschichte unserer Blechkollegen.",
+        "authors": [
+            {
+                "firstname": "Gottfried",
+                "lastname": "Wolmeringer"
+            }
+        ]
+    },
+    {
         "isbn": "978-3958457249",
         "title": "Clean Architecture",
         "description": "Das Praxis-Handbuch für professionelles Softwaredesign.Regeln und Paradigmen für effiziente Softwarestrukturierung.",
@@ -31,25 +54,6 @@
                 "firstname": "Robert",
                 "middlename": "C.",
                 "lastname": "Martin"
-            }
-        ]
-    },
-    {
-        "isbn": "978-1491910771",
-        "title": "Head First Java",
-        "description": "A Learner's Guide to Real-World Programming",
-        "authors": [
-            {
-                "firstname": "Kathy",
-                "lastname": "Sierra"
-            },
-            {
-                "firstname": "Bert",
-                "lastname": "Bates"
-            },
-            {
-                "firstname": "Trisha",
-                "lastname": "Gee"
             }
         ]
     }
