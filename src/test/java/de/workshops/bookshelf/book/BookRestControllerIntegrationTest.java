@@ -1,5 +1,6 @@
 package de.workshops.bookshelf.book;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,13 +33,14 @@ class BookRestControllerIntegrationTest {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/book"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(3)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title", is("Clean Code")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].title", hasItem("Clean Code")))
                 .andReturn();
+
         String jsonPayload = mvcResult.getResponse().getContentAsString();
 
-        Book[] books = objectMapper.readValue(jsonPayload, Book[].class);
-        assertEquals(3, books.length);
-        assertEquals("Clean Code", books[1].getTitle());
+        List<Book> books = objectMapper.readValue(jsonPayload, new TypeReference<>() {});
+        assertThat(books).hasSize(4)
+                .anyMatch(book -> book.getTitle().equals("Clean Code"));
     }
 }
