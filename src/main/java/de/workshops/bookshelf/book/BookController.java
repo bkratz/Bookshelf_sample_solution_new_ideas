@@ -1,29 +1,32 @@
 package de.workshops.bookshelf.book;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/")
 public class BookController {
 
-    @Autowired
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     private List<Book> books;
 
+    public BookController(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @PostConstruct
     public void init() throws IOException {
-        this.books = Arrays.asList(mapper.readValue(new File("target/classes/books.json"), Book[].class));
+        this.books = mapper.readValue(new File("target/classes/books.json"), new TypeReference<>() {});
     }
     
     @GetMapping
