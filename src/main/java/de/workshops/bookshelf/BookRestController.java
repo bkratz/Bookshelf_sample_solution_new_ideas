@@ -49,15 +49,18 @@ public class BookRestController {
     }
 
     @GetMapping(params = "author")
-    public Book searchBookByAuthor(@RequestParam @NotBlank @Size(min = 3) String author) throws Exception {
-        return this.books.stream().filter(book -> hasAuthor(book, author)).findFirst().orElseThrow(Exception::new);
+    public List<Book> searchBookByAuthor(@RequestParam @NotBlank @Size(min = 3) String author) {
+        return this.books.stream()
+                .filter(book -> hasAuthor(book, author))
+                .toList();
     }
 
     private boolean hasIsbn(Book book, String isbn) {
         return book.getIsbn().equals(isbn);
     }
 
-    private boolean hasAuthor(Book book, String author) {
-        return book.getAuthor().contains(author);
+    private boolean hasAuthor(Book book, String authorName) {
+        return book.getAuthors().stream()
+                .anyMatch(author -> author.toString().contains(authorName));
     }
 }
