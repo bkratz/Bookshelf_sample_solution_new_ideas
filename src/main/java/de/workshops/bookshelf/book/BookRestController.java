@@ -22,13 +22,8 @@ public class BookRestController {
     private final BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks() {
-        List<Book> result = bookService.getAllBooks();
-        if (result == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
+    public List<Book> getAllBooks() {
+        return bookService.getAllBooks();
     }
 
     @GetMapping("/{isbn}")
