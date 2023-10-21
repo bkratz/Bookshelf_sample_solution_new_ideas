@@ -10,7 +10,14 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,15 +59,16 @@ public class BookRestController {
     }
 
     @GetMapping(params = "author")
-    public Book searchBookByAuthor(@RequestParam @NotBlank @Size(min = 3) String author) throws BookException {
-        return this.books.stream().filter(book -> hasAuthor(book, author)).findFirst().orElseThrow(BookException::new);
+    public List<Book> searchBookByAuthor(@RequestParam @NotBlank @Size(min = 3) String author) {
+        return this.books.stream()
+                .filter(book -> hasAuthor(book, author))
+                .toList();
     }
 
     @PostMapping("/search")
     public List<Book> searchBooks(@RequestBody @Valid BookSearchRequest request) {
         return this.books.stream()
-                .filter(book -> hasAuthor(book, request.author()))
-                .filter(book -> hasIsbn(book, request.isbn()))
+                .filter(book -> hasAuthor(book, request.author()) || hasIsbn(book, request.isbn()))
                 .toList();
     }
 
@@ -73,7 +81,8 @@ public class BookRestController {
         return book.getIsbn().equals(isbn);
     }
 
-    private boolean hasAuthor(Book book, String author) {
-        return book.getAuthor().contains(author);
+    private boolean hasAuthor(Book book, String authorName) {
+        return book.getAuthors().stream()
+                .anyMatch(author -> author.toString().contains(authorName));
     }
 }
