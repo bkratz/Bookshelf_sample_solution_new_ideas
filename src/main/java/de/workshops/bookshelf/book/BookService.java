@@ -37,9 +37,7 @@ class BookService {
     }
 
     public Book createBook(Book book) {
-        books.add(book);
-
-        return book;
+        return bookRepository.saveBook(book);
     }
 
     private boolean hasIsbn(Book book, String isbn) {

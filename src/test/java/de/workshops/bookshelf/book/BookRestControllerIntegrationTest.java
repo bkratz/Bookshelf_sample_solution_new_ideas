@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
@@ -86,13 +87,18 @@ class BookRestControllerIntegrationTest {
 
     @Test
     void createBook() throws Exception {
-        String author = "Eric Evans";
+        String authorFirstname = "Eric";
+        String authorLastname = "Evans";
         String title = "Domain-Driven Design: Tackling Complexity in the Heart of Software";
         String isbn = "978-0321125217";
         String description = "This is not a book about specific technologies. It offers readers a systematic approach to domain-driven design, presenting an extensive set of design best practices, experience-based techniques, and fundamental principles that facilitate the development of software projects facing complex domains.";
 
+        final var author = new Author();
+        author.setFirstname(authorFirstname);
+        author.setLastname(authorLastname);
+
         Book expectedBook = new Book();
-        expectedBook.setAuthor(author);
+        expectedBook.getAuthors().add(author);
         expectedBook.setTitle(title);
         expectedBook.setIsbn(isbn);
         expectedBook.setDescription(description);
@@ -102,9 +108,14 @@ class BookRestControllerIntegrationTest {
                                 {
                                     "isbn": "%s",
                                     "title": "%s",
-                                    "author": "%s",
-                                    "description": "%s"
-                                }""".formatted(isbn, title, author, description))
+                                    "description": "%s",
+                                    "authors": [
+                                        {
+                                            "firstname": "%s",
+                                            "lastname": "%s"
+                                        }
+                                    ]
+                                }""".formatted(isbn, title, description, authorFirstname, authorLastname))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
