@@ -26,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -136,6 +135,10 @@ class BookRestControllerIntegrationTest {
         String jsonPayload = mvcResult.getResponse().getContentAsString();
 
         Book book = objectMapper.readValue(jsonPayload, Book.class);
-        assertEquals(expectedBook, book);
+
+        assertThat(book)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(expectedBook);
     }
 }

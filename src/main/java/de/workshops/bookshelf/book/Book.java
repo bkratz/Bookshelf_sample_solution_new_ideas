@@ -1,16 +1,20 @@
 package de.workshops.bookshelf.book;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -25,13 +29,14 @@ public class Book {
     @JsonIgnore
     private Long id;
 
+    private String isbn;
     private String title;
-
     private String description;
 
-    private String author;
-
-    private String isbn;
+    @OneToMany
+    @JoinColumn(name="AUTHOR_ID",
+            nullable=false)
+    private List<Author> authors = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
