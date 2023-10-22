@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class BookRestControllerTest {
@@ -15,7 +14,6 @@ class BookRestControllerTest {
 
     @Test
     void getAllBooks() {
-        assertNotNull(bookRestController.getAllBooks().getBody());
-        assertEquals(3, bookRestController.getAllBooks().getBody().size());
+        assertEquals(4, bookRestController.getAllBooks().size());
     }
 }
