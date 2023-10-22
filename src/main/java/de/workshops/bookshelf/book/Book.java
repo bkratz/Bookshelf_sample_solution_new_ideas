@@ -2,14 +2,13 @@ package de.workshops.bookshelf.book;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
-public class Book {
-
+class Book {
     private String title;
-
-    private String description;
-
-    private String author;
-
     private String isbn;
+    private String description;
+    private List<Author> authors = new ArrayList<>();
 }

@@ -3,24 +3,17 @@ package de.workshops.bookshelf.book;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@WebMvcTest(
-        controllers = BookRestController.class,
-        includeFilters = @ComponentScan.Filter(
-                type = FilterType.ANNOTATION,
-                classes = ConfigurationProperties.class
-        )
-)
+import java.util.List;
+
+@WebMvcTest(BookRestController.class)
 @AutoConfigureMockMvc
 class BookRestControllerMockitoIntegrationTest {
 
@@ -32,10 +25,10 @@ class BookRestControllerMockitoIntegrationTest {
 
     @Test
     void getAllBooks() throws Exception {
-        Mockito.when(bookService.getAllBooks()).thenReturn(null);
+        Mockito.when(bookService.getAllBooks()).thenReturn(List.of());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/book"))
+        mockMvc.perform(MockMvcRequestBuilders.get(BookRestController.REQUEST_URL))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
