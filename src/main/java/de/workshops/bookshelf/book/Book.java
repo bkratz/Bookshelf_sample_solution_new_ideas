@@ -5,8 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -33,9 +32,7 @@ public class Book {
     private String title;
     private String description;
 
-    @OneToMany
-    @JoinColumn(name="AUTHOR_ID",
-            nullable=false)
+    @ManyToMany
     private List<Author> authors = new ArrayList<>();
 
     @Override
