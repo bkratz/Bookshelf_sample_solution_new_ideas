@@ -5,45 +5,38 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
-public class Book {
-
+class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
 
-    private String isbn;
-    private String title;
-    private String description;
+    private String firstname;
+    private String middlename;
+    private String lastname;
 
-    @OneToMany
-    @JoinColumn(name="AUTHOR_ID",
-            nullable=false)
-    private List<Author> authors = new ArrayList<>();
+    @Override
+    public String toString() {
+        return "%s %s %s".formatted(firstname, middlename, lastname);
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Book book = (Book) o;
-        return id != null && Objects.equals(id, book.id);
+        Author author = (Author) o;
+        return id != null && Objects.equals(id, author.id);
     }
 
     @Override
