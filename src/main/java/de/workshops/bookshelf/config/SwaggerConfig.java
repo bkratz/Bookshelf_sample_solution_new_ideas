@@ -12,15 +12,16 @@ import org.springframework.context.annotation.Profile;
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI api() {
+    public OpenAPI api(BookshelfProperties bookshelfProperties) {
         return new OpenAPI()
                 .info(
                         new Info()
-                                .title("Bookshelf API")
-                                .version("v0.0.1")
+                                .title(bookshelfProperties.getTitle())
+                                .version(bookshelfProperties.getVersion())
+                                .description(bookshelfProperties.getDescription() + bookshelfProperties.getCapacity())
                                 .license(new License()
-                                                .name("MIT License")
-                                                .url("https://opensource.org/licenses/MIT")
+                                                .name(bookshelfProperties.getLicense().getName())
+                                                .url(bookshelfProperties.getLicense().getUrl().toString())
                                 )
                 );
     }
