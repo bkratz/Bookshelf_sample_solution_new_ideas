@@ -1,30 +1,28 @@
 package de.workshops.bookshelf.book;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class BookRestControllerMockitoReflectionTestUtilsTest {
 
-    @Mock
-    private BookService bookService;
+    @MockBean
+    private BookRepository bookRepository;
 
-    @InjectMocks
+    @Autowired
     private BookRestController bookRestController;
 
     @Test
     void getAllBooks() {
-        ReflectionTestUtils.setField(bookService, "books", Collections.emptyList());
+        ReflectionTestUtils.setField(bookRepository, "books", Collections.emptyList());
 
-        assertNotNull(bookRestController.getAllBooks().getBody());
-        assertEquals(0, bookRestController.getAllBooks().getBody().size());
+        assertEquals(0, bookRestController.getAllBooks().size());
     }
 }

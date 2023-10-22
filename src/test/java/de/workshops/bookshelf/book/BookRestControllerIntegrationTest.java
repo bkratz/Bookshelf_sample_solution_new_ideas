@@ -1,8 +1,10 @@
 package de.workshops.bookshelf.book;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.workshops.bookshelf.config.JacksonTestConfiguration;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +20,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,20 +55,21 @@ class BookRestControllerIntegrationTest {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/book"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(3)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title", is("Clean Code")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].title", hasItem("Clean Code")))
                 .andReturn();
+
         String jsonPayload = mvcResult.getResponse().getContentAsString();
 
-        Book[] books = objectMapper.readValue(jsonPayload, Book[].class);
-        assertEquals(3, books.length);
-        assertEquals("Clean Code", books[1].getTitle());
+        List<Book> books = objectMapper.readValue(jsonPayload, new TypeReference<>() {});
+        assertThat(books).hasSize(4)
+                .anyMatch(book -> book.getTitle().equals("Clean Code"));
     }
 
     @Test
     void testWithRestAssuredMockMvc() {
         RestAssuredMockMvc.standaloneSetup(bookRestController);
-        RestAssuredMockMvc.
+        final var response = RestAssuredMockMvc.
                 given().
                 log().all().
                 when().
@@ -72,7 +77,12 @@ class BookRestControllerIntegrationTest {
                 then().
                 log().all().
                 statusCode(200).
-                body("author[0]", equalTo("Erich Gamma"));
+                body("size()", is(4)).
+                extract().response();
+        final var books = response.as(new TypeRef<List<Book>>() {});
+        assertThat(books)
+                .anyMatch(book -> book.getAuthors().stream()
+                        .anyMatch(author -> author.getFirstname().equals("Erich")));
     }
 
     @Test
@@ -85,18 +95,23 @@ class BookRestControllerIntegrationTest {
                 then().
                 log().all().
                 statusCode(200).
-                body("author[0]", equalTo("Erich Gamma"));
+                body("size()", is(4));
     }
 
     @Test
     void createBook() throws Exception {
-        String author = "Eric Evans";
+        String authorFirstname = "Eric";
+        String authorLastname = "Evans";
         String title = "Domain-Driven Design: Tackling Complexity in the Heart of Software";
         String isbn = "978-0321125217";
         String description = "This is not a book about specific technologies. It offers readers a systematic approach to domain-driven design, presenting an extensive set of design best practices, experience-based techniques, and fundamental principles that facilitate the development of software projects facing complex domains.";
 
+        final var author = new Author();
+        author.setFirstname(authorFirstname);
+        author.setLastname(authorLastname);
+
         Book expectedBook = new Book();
-        expectedBook.setAuthor(author);
+        expectedBook.getAuthors().add(author);
         expectedBook.setTitle(title);
         expectedBook.setIsbn(isbn);
         expectedBook.setDescription(description);
@@ -106,9 +121,14 @@ class BookRestControllerIntegrationTest {
                                 {
                                     "isbn": "%s",
                                     "title": "%s",
-                                    "author": "%s",
-                                    "description": "%s"
-                                }""".formatted(isbn, title, author, description))
+                                    "description": "%s",
+                                    "authors": [
+                                        {
+                                            "firstname": "%s",
+                                            "lastname": "%s"
+                                        }
+                                    ]
+                                }""".formatted(isbn, title, description, authorFirstname, authorLastname))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -116,9 +136,6 @@ class BookRestControllerIntegrationTest {
         String jsonPayload = mvcResult.getResponse().getContentAsString();
 
         Book book = objectMapper.readValue(jsonPayload, Book.class);
-        assertThat(book)
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(expectedBook);
+        assertEquals(expectedBook, book);
     }
 }
